@@ -23,7 +23,8 @@ import numpy as np
 
 from plan2explore import control
 from plan2explore import tools
-
+from plan2explore import envs
+import d4rl
 
 Task = collections.namedtuple('Task', 'name, env_ctor, state_components')
 
@@ -414,7 +415,7 @@ def _gym_env(
   import gym
   env = gym.make(name)
   env = control.wrappers.ActionRepeat(env, action_repeat)
-  env = control.wrappers.NormalizeActions(env)
+  #env = control.wrappers.NormalizeActions(env)
   if obs_is_image:
     env = control.wrappers.ObservationDict(env, 'image')
     env = control.wrappers.ObservationToRender(env)
@@ -422,10 +423,26 @@ def _gym_env(
     env = control.wrappers.ObservationDict(env, 'state')
   if select_obs is not None:
     env = control.wrappers.SelectObservations(env, select_obs)
-  size = params.get('render_size', 64)
-  env = control.wrappers.PixelObservations(
-      env, (size, size), np.uint8, 'image', render_mode)
+  # size = params.get('render_size', 64)
+  # env = control.wrappers.PixelObservations(
+  #     env, (size, size), np.uint8, 'image', render_mode)
   return _common_env(env, config, params)
+
+
+def gym_maze(config, params):
+  action_repeat = params.get('action_repeat', 1)
+  state_components = ['state']
+  env_ctor = tools.bind(
+      _gym_env, 'ACRandMaze-v0', config, params, action_repeat)
+  return Task('gym_maze', env_ctor, state_components)
+
+
+def gym_kitchen(config, params):
+  action_repeat = params.get('action_repeat', 1)
+  state_components = ['state']
+  env_ctor = tools.bind(
+      _gym_env, 'kitchen-mixed-v0', config, params, action_repeat)
+  return Task('gym_kitchen', env_ctor, state_components)
 
 
 def _common_env(env, config, params):

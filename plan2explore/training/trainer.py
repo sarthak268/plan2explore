@@ -20,6 +20,9 @@ import collections
 import os
 
 import tensorflow as tf
+from tensorflow.core.protobuf import rewriter_config_pb2
+from tensorflow.keras.backend import set_session
+tf.keras.backend.clear_session()  # For easy reset of notebook state.
 
 from plan2explore import tools
 
@@ -123,6 +126,7 @@ class Trainer(object):
 
   def iterate(self, max_step=None, sess=None):
     sess = sess or self._create_session()
+    
     epoch_switch_flag = False
     with sess:
       self._initialize_variables(
@@ -224,7 +228,9 @@ class Trainer(object):
 
   def _create_session(self):
     config = tf.ConfigProto()
-    config.gpu_options.allow_growth = True
+    #config.gpu_options.allow_growth = True
+    off = rewriter_config_pb2.RewriterConfig.OFF
+    config.graph_options.rewrite_options.memory_optimization = off
     try:
       return tf.Session('local', config=config)
     except tf.errors.NotFoundError:
