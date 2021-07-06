@@ -415,7 +415,7 @@ def _gym_env(
   import gym
   env = gym.make(name)
   env = control.wrappers.ActionRepeat(env, action_repeat)
-  #env = control.wrappers.NormalizeActions(env)
+  env = control.wrappers.NormalizeActions(env)
   if obs_is_image:
     env = control.wrappers.ObservationDict(env, 'image')
     env = control.wrappers.ObservationToRender(env)
@@ -423,9 +423,9 @@ def _gym_env(
     env = control.wrappers.ObservationDict(env, 'state')
   if select_obs is not None:
     env = control.wrappers.SelectObservations(env, select_obs)
-  # size = params.get('render_size', 64)
-  # env = control.wrappers.PixelObservations(
-  #     env, (size, size), np.uint8, 'image', render_mode)
+  size = params.get('render_size', 64)
+  env = control.wrappers.PixelObservations(
+      env, (size, size), np.uint8, 'image', render_mode)
   return _common_env(env, config, params)
 
 
@@ -443,7 +443,7 @@ def gym_kitchen(config, params):
   env_ctor = tools.bind(
       _gym_env, 'kitchen-mixed-v0', config, params, action_repeat)
   return Task('gym_kitchen', env_ctor, state_components)
-
+  #return Task('gym_kitchen', env_ctor, [])
 
 def _common_env(env, config, params):
   env = control.wrappers.MinimumDuration(env, config.batch_shape[0])
