@@ -166,7 +166,8 @@ class PixelObservations(object):
     return obs
 
   def _render_image(self):
-    image = self._env.render(self._render_mode)
+    #print ('===============',self._env)
+    image = self._env.render('rgb_array')
     if image.shape[:2] != self._size:
       kwargs = dict(
           output_shape=self._size, mode='edge', order=1, preserve_range=True)

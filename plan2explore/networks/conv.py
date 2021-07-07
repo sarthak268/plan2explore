@@ -50,7 +50,6 @@ def decoder(features, data_shape, std=1.0):
   hidden = tf.layers.conv2d_transpose(hidden, 64, 5, **kwargs)
   hidden = tf.layers.conv2d_transpose(hidden, 32, 6, **kwargs)
   mean = tf.layers.conv2d_transpose(hidden, data_shape[-1], 6, strides=2)
-  print ('=============================================>>>>>>>>>>>>>',data_shape, mean.shape)
-  assert mean.shape[2:].as_list() == data_shape, mean.shape
+  assert mean.shape[1:].as_list() == data_shape, mean.shape
   mean = tf.reshape(mean, tools.shape(features)[:-1] + data_shape)
   return tfd.Independent(tfd.Normal(mean, std), len(data_shape))

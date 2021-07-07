@@ -438,12 +438,12 @@ def gym_maze(config, params):
 
 
 def gym_kitchen(config, params):
+  # Works with `isolate_envs: process`.
   action_repeat = params.get('action_repeat', 1)
   state_components = ['state']
   env_ctor = tools.bind(
       _gym_env, 'kitchen-mixed-v0', config, params, action_repeat)
   return Task('gym_kitchen', env_ctor, state_components)
-  #return Task('gym_kitchen', env_ctor, [])
 
 def _common_env(env, config, params):
   env = control.wrappers.MinimumDuration(env, config.batch_shape[0])

@@ -403,7 +403,7 @@ def _model_components(config, params):
 
 
 def _tasks(config, params):
-  config.isolate_envs = params.get('isolate_envs', 'thread')
+  config.isolate_envs = params.get('isolate_envs', 'process')
   train_tasks, test_tasks = [], []
   for name in params.get('tasks', ['cheetah_run']):
     try:
